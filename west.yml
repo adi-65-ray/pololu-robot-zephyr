@@ -1,0 +1,13 @@
+manifest:
+  remotes:
+    - name: zephyrproject
+      url-base: https://github.com/zephyrproject-rtos
+
+  projects:
+    - name: zephyr
+      remote: zephyrproject
+      revision: v3.5.0      # project version
+      import: true          # downloads all Pico/HAL modules automatically
+
+  self:
+    path: pololu-robot      # Tells west that THIS folder is your main app
