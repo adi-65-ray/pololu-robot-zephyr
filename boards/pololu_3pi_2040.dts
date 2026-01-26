@@ -1,0 +1,95 @@
+
+/dts-v1/;
+
+#include "rpi_pico-common.dtsi"
+#include "pololu_3pi_2040-pinctrl.dtsi"
+
+/{
+    compatible = "pololu_3pi_2040"
+    chosen{
+        zephyr,sram = &sram0;
+        zephyr,flash = &flash0;
+        zephyr,display = &display;
+    };
+
+    aliases{
+        mag = &magnetometer;
+        imu = &imu;
+        watchdog = &wdt0;
+    };
+
+    buttons{
+        
+    };
+
+};
+
+&i2c0 {
+    status = "okay";
+    pinctrl-0 = <&i2c0_default>;
+    pinctrl-names = "default";
+    clock-frequency = <I2C_BITRATE_FAST>;
+
+    magnetometer: lis3mdl@1e{
+        compatible = "st,lis3mdl";
+        reg = <0x1e>;
+    };
+    imu: lsm6dso@6b{
+        compatible = "st,lsm6dso";
+        reg = <0x6b>;
+    };
+};
+
+&spi0 {
+    status = "okay";
+    pinctrl-0 = <&spi0_default>;
+    pinctrl-name = "default";
+
+    display:sh1106@0{
+        compatible = "sinowealth,sh1106";
+        reg = <0>;
+        spi-max-frequency = <400000>;
+
+        reset-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+        dc-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
+
+        width = <132>;
+        height = <64>;
+    };
+};
+
+&pio0 {
+    status = "okay";
+    pinctrl-0 = <&pio0_quadrature_encoder>;
+    pinctrl-name = "default";
+
+    encoder:encoder@0{
+        compatible = "pololu,encoder";
+        reg = <0>;
+        #gpio-cells = <2>;
+        encoder-r = <&gpio0 8 (GPIO_ACTIVE_HIGH)>;
+        encoder-l = <&gpio0 9 (GPIO_ACTIVE_HIGH)>;
+    };
+};
+
+&pio1 {
+    status = "okay";
+    pinctrl-0 = <&pio1_ir_sensor>;
+    pinctrl-name = "default";
+
+    ir_sensor:ir_sensor@0{
+        compatible = "pololu,ir_sensor";
+        reg = <0>;
+        #gpio-cells = <2>;
+        base-pin = <18>;
+        ngpios = <5>; 
+    };
+
+    bump_sensor:bump_sensor@1{
+        compatible = "pololu,bump_sensor";
+        reg = <1>;
+        #gpio-cells = <2>;
+        bump-r = <&gpio0 16 (GPIO_ACTIVE_HIGH)>;
+        bump-l = <&gpio0 17 (GPIO_ACTIVE_HIGH)>;
+    };
+};

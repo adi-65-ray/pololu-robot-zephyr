@@ -1,0 +1,35 @@
+
+#include <zephyr/dt-bindings/pinctrl/rpi-pico-rp2040-pinctrl.h>
+
+&pinctrl
+{
+    i2c0_default: i2c0_default{
+        group1{
+            pinmux = <I2C0_SDA_P4>, <I2C0_SCL_P5>;
+            input-enable;
+            input-schmitt-enable;
+        };
+    };
+
+    spi0_default: spi0_default {
+		group1 {
+			pinmux = <SPI0_SCK_P2>, <SPI0_TX_P3>;
+		};
+	};
+
+    pio0_quadrature_encoder: pio1_quadrature_encoder{
+        group1{
+            pinmux = <PIO0_P8>, <PIO0_P9>;
+            input-enable;
+            input-schmitt-enable;
+        };
+    };
+
+    pio1_qtr_sensor: pio1_qtr_sensor{
+        group1{
+            pinmux = <PIO1_P16>, <PIO1_P17>, <PIO1_P18>, <PIO1_P19>, <PIO1_P20>, <PIO1_P21>, <PIO1_P22>, <PIO1_P23>, <PIO1_P26>;
+            input-enable;
+            input-schmitt-enable;
+        };
+    };
+};
