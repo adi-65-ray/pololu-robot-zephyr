@@ -1,0 +1,3 @@
+config BOARD_POLOLU_3PI_2040
+    bool "Pololu 3pi+ 2040"
+	depends on SOC_RP2040

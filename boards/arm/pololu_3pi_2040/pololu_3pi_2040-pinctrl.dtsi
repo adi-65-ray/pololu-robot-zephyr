@@ -17,7 +17,7 @@
 		};
 	};
 
-    pio0_quadrature_encoder: pio1_quadrature_encoder{
+    pio0_quadrature_encoder: pio0_quadrature_encoder{
         group1{
             pinmux = <PIO0_P8>, <PIO0_P9>;
             input-enable;

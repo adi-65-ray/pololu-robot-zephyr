@@ -1,6 +1,0 @@
-board:
-  name: pololu_3pi_2040
-  vendor: pololu
-  revision: 1.0.0
-  arch: arm
-  soc: rp2040
