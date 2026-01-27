@@ -1,16 +1,26 @@
 /dts-v1/;
 
-#include "rpi_pico-common.dtsi"
+#include <freq.h>
+#include <rpi_pico/rp2040.dtsi>
 #include "pololu_3pi_2040-pinctrl.dtsi"
 
 /{
     compatible = "pololu_3pi_2040";
 
     chosen {
-        zephyr,sram = &sram0;
-        zephyr,flash = &flash0;
-        zephyr,display = &display;
-    };
+		zephyr,sram = &sram0;
+		zephyr,flash = &flash0;
+		zephyr,flash-controller = &ssi;
+		zephyr,console = &uart0;
+		zephyr,shell-uart = &uart0;
+		zephyr,code-partition = &code_partition;
+	};
+
+	xtal_clk: xtal-clk {
+		compatible = "fixed-clock";
+		clock-frequency = <12000000>;
+		#clock-cells = <0>;
+	};
 
     aliases {
         mag = &magnetometer;
@@ -26,6 +36,44 @@
             label = "Button A";
         };
     };
+};
+
+&flash0 {
+	reg = <0x10000000 DT_SIZE_M(2)>;
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Reserved memory for the second stage bootloader */
+		second_stage_bootloader: partition@0 {
+			label = "second_stage_bootloader";
+			reg = <0x00000000 0x100>;
+			read-only;
+		};
+
+		/*
+		 * Usable flash. Starts at 0x100, after the bootloader. The partition
+		 * size is 2MB minus the 0x100 bytes taken by the bootloader.
+		 */
+		code_partition: partition@100 {
+			label = "code-partition";
+			reg = <0x100 (DT_SIZE_M(2) - 0x100)>;
+			read-only;
+		};
+	};
+};
+
+&uart0 {
+	current-speed = <115200>;
+	status = "okay";
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-names = "default";
+};
+
+&gpio0 {
+	status = "okay";
 };
 
 &i2c0 {
@@ -55,8 +103,8 @@
         reg = <0>;
         spi-max-frequency = <4000000>; // Boosted to 4MHz
 
+        data_cmd-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>
         reset-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
-        dc-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
 
         width = <132>;
         height = <64>;
@@ -64,6 +112,9 @@
 };
 
 &pio0 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+
     status = "okay";
     pinctrl-0 = <&pio0_quadrature_encoder>;
     pinctrl-names = "default"; 
@@ -77,8 +128,11 @@
 };
 
 &pio1 {
+    #address-cells = <1>;
+    #size-cells = <0>;
+
     status = "okay";
-    pinctrl-0 = <&pio1_ir_sensor>;
+    pinctrl-0 = <&pio1_qtr_sensor>;
     pinctrl-name = "default";
 
     ir_sensor:ir_sensor@0{
@@ -96,4 +150,37 @@
         bump-r = <&gpio0 16 (GPIO_ACTIVE_HIGH)>;
         bump-l = <&gpio0 17 (GPIO_ACTIVE_HIGH)>;
     };
+};
+
+zephyr_udc0: &usbd {
+	status = "okay";
+};
+
+&timer {
+	status = "okay";
+};
+
+&wdt0 {
+	status = "okay";
+};
+
+&adc {
+	status = "okay";
+	pinctrl-0 = <&adc_default>;
+	pinctrl-names = "default";
+};
+
+zephyr_udc0: &usbd {
+	status = "okay";
+};
+
+&pwm {
+	pinctrl-0 = <&pwm_ch4b_default>;
+	pinctrl-names = "default";
+	divider-int-0 = <255>;
+};
+
+&vreg {
+	regulator-always-on;
+	regulator-allowed-modes = <REGULATOR_RPI_PICO_MODE_NORMAL>;
 };
