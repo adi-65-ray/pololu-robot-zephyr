@@ -27,12 +27,6 @@
 		};
 	};
 
-    pwm_ch4b_default: pwm_ch4b_default {
-		group1 {
-			pinmux = <PWM_4B_P25>;
-		};
-	};
-
 	adc_default: adc_default {
 		group1 {
 			pinmux = <ADC_CH0_P26>, <ADC_CH1_P27>, <ADC_CH2_P28>, <ADC_CH3_P29>;
@@ -53,6 +47,12 @@
             pinmux = <PIO1_P16>, <PIO1_P17>, <PIO1_P18>, <PIO1_P19>, <PIO1_P20>, <PIO1_P21>, <PIO1_P22>, <PIO1_P23>, <PIO1_P26>;
             input-enable;
             input-schmitt-enable;
+        };
+    };
+
+    pwm_motors: pwm_motors{
+	    group1{
+		   pinmux = <PWM_7A_P14>, <PWM_7B_P15>;
         };
     };
 };

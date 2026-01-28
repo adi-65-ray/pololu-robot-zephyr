@@ -2,6 +2,9 @@
 
 #include <freq.h>
 #include <rpi_pico/rp2040.dtsi>
+#include <rpi_pico/rp2040.dtsi>
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
 #include "pololu_3pi_2040-pinctrl.dtsi"
 
 /{
@@ -16,18 +19,18 @@
 		zephyr,code-partition = &code_partition;
 	};
 
-	xtal_clk: xtal-clk {
-		compatible = "fixed-clock";
-		clock-frequency = <12000000>;
-		#clock-cells = <0>;
-	};
-
     aliases {
         mag = &magnetometer;
         imu = &imu;
         watchdog = &wdt0;
         led0 = &led0;
     };
+
+	xtal_clk: xtal-clk {
+		compatible = "fixed-clock";
+		clock-frequency = <12000000>;
+		#clock-cells = <0>;
+	};
 
     leds {
 		compatible = "gpio-leds";
@@ -36,6 +39,19 @@
 			label = "LED";
 		};
 	};
+
+    motors:motors {
+        compatible = "pololu_3pi_2040,motor-driver";
+
+        right_motor_dir = <&gpio0 10 (GPIO_ACTIVE_HIGH)>;
+        left_motor_dir = <&gpio0 11 (GPIO_ACTIVE_HIGH)>;
+
+        pwms = <&pwm 14 PWM_MSEC(1) PWM_POLARITY_NORMAL>,
+               <&pwm 15 PWM_MSEC(1) PWM_POLARITY_NORMAL>;
+        pwm-names = "right_motor", "left_motor";
+
+        maxpower = <0x0FFF>;
+    };
 };
 
 &flash0 {
@@ -178,12 +194,8 @@ zephyr_udc0: &usbd {
 	pinctrl-names = "default";
 };
 
-zephyr_udc0: &usbd {
-	status = "okay";
-};
-
 &pwm {
-	pinctrl-0 = <&pwm_ch4b_default>;
+	pinctrl-0 = <&pwm_motors>;
 	pinctrl-names = "default";
 	divider-int-0 = <255>;
 };

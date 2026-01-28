@@ -1,0 +1,32 @@
+description: Pololu 3pi+ 2040 motor driver
+
+compatible: "pololu_3pi_2040,motor-driver"
+
+include: [pololu_3pi_2040,pio-common.yaml, raspberrypi,pico-pwm.yaml]
+
+properties:
+  right_motor_dir:
+    type: phandle
+    required: true
+    description: right motor direction pin
+
+  left_motor_dir:
+    type: phandle
+    required: true
+    description: left motor direction pin
+
+  pwm:
+    type: phandle array
+    required: true
+    description: motor pwm pins to control speed 
+
+  pwm-names:
+    type: string array
+    required: false
+    description: Names of the pwm pins
+
+  maxpower:
+    type: int
+    required: false
+    default: 0x0FFF
+    
