@@ -1,0 +1,5 @@
+description: Pololu 3pi+ 2040 PIO devices
+
+compatible: "pololu_3pi_2040,pio-common"
+
+include: [base.yaml, raspberrypi,pico-pio.yaml, pinctrl-device.yaml]

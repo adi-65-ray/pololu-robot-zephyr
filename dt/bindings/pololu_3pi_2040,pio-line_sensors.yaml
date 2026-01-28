@@ -1,0 +1,6 @@
+description: Pololu 3pi+ 2040 PIO line sensors
+
+compatible: "pololu_3pi_2040,pio-line_sensors"
+
+include: pololu_3pi_2040,pio-common.yaml
+

@@ -26,16 +26,16 @@
         mag = &magnetometer;
         imu = &imu;
         watchdog = &wdt0;
-        sw0 = &button_a;
+        led0 = &led0;
     };
 
-    buttons {
-        compatible = "gpio-keys";
-        button_a: button_0 {
-            gpios = <&gpio0 25 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-            label = "Button A";
-        };
-    };
+    leds {
+		compatible = "gpio-leds";
+		led0: led_0 {
+			gpios = <&gpio0 25 GPIO_ACTIVE_HIGH>;
+			label = "LED";
+		};
+	};
 };
 
 &flash0 {
@@ -82,8 +82,8 @@
     pinctrl-names = "default";
     clock-frequency = <I2C_BITRATE_FAST>;
 
-    magnetometer: lis3mdl@1e {
-        compatible = "st,lis3mdl";
+    magnetometer: lis3mdl-magn@1e {
+        compatible = "st,lis3mdl-magn";
         reg = <0x1e>;
     };
 
@@ -103,8 +103,14 @@
         reg = <0>;
         spi-max-frequency = <4000000>; // Boosted to 4MHz
 
-        data_cmd-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>
+        data_cmd-gpios = <&gpio0 0 GPIO_ACTIVE_HIGH>;
         reset-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+
+        segment-offset = <2>; 
+        page-offset = <0>;
+        display-offset = <0>;
+        multiplex-ratio = <63>;
+        prechargep = <0x22>;
 
         width = <132>;
         height = <64>;
@@ -116,14 +122,15 @@
     #size-cells = <0>;
 
     status = "okay";
+    compatible = "pololu_3pi_2040,pio-common";
     pinctrl-0 = <&pio0_quadrature_encoder>;
     pinctrl-names = "default"; 
 
-    encoder: encoder@0 {
-        compatible = "pololu,encoder";
+    encoders: encoders@0 {
+        compatible = "pololu_3pi_2040,pio-encoders";
         reg = <0>;
-        encoder-r = <&gpio0 8 GPIO_ACTIVE_HIGH>;
-        encoder-l = <&gpio0 9 GPIO_ACTIVE_HIGH>;
+        encoder-r = <&gpio0 8 GPIO_ACTIVE_HIGH>, <&gpio0 9 GPIO_ACTIVE_HIGH>;
+        encoder-l = <&gpio0 12 GPIO_ACTIVE_HIGH>, <&gpio0 13 GPIO_ACTIVE_HIGH>;
     };
 };
 
@@ -132,19 +139,20 @@
     #size-cells = <0>;
 
     status = "okay";
+    compatible = "pololu_3pi_2040,pio-common";
     pinctrl-0 = <&pio1_qtr_sensor>;
     pinctrl-name = "default";
 
-    ir_sensor:ir_sensor@0{
-        compatible = "pololu,ir_sensor";
+    line_sensors:line_sensors@0{
+        compatible = "pololu_3pi_2040,pio-line_sensors";
         reg = <0>;
         #gpio-cells = <2>;
         base-pin = <18>;
         ngpios = <5>; 
     };
 
-    bump_sensor:bump_sensor@1{
-        compatible = "pololu,bump_sensor";
+    bump_sensors:bump_sensors@1{
+        compatible = "pololu_3pi_2040,pio-bump_sensors";
         reg = <1>;
         #gpio-cells = <2>;
         bump-r = <&gpio0 16 (GPIO_ACTIVE_HIGH)>;

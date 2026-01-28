@@ -42,7 +42,7 @@
 
     pio0_quadrature_encoder: pio0_quadrature_encoder{
         group1{
-            pinmux = <PIO0_P8>, <PIO0_P9>;
+            pinmux = <PIO0_P8>, <PIO0_P9>, <PIO0_P12>, <PIO0_P13>;
             input-enable;
             input-schmitt-enable;
         };
