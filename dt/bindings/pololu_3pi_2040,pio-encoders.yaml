@@ -1,0 +1,16 @@
+description: Pololu 3pi+ 2040 PIO encoders
+
+compatible: "pololu_3pi_2040,pio-encoders"
+
+include: pololu_3pi_2040,pio-common.yaml
+
+properties:
+  encoder-r:
+    type: phandle array
+    required: true
+    description: Right encoder A, Right encoder B
+
+  encoder-l:
+    type: phandle array
+    required: true
+    description: Left encoder A, Left encoder B

@@ -1,0 +1,16 @@
+description: Pololu 3pi+ 2040 PIO bump sensors
+
+compatible: "pololu_3pi_2040,pio-bump_sensors"
+
+include: pololu_3pi_2040,pio-common.yaml
+
+properties:
+  bump-r:
+    type: phandle
+    required: true
+    description: BUMPR pin
+
+  bump-l:
+    type: phandle 
+    required: true
+    description: BUMPL pin
